@@ -1,4 +1,4 @@
-#include <QApplication>
+#include <QCoreApplication>
 #include <QCamera>
 #include <QCameraInfo>
 #include <QCommandLineParser>
@@ -89,33 +89,33 @@ static void onFrameAvailable(QImage newFrame)
 
 int main(int argc, char **argv)
 {
-	QApplication app(argc, argv);
+	QCoreApplication app(argc, argv);
 	QCommandLineParser parser;
 	QCamera camera;
 	CameraFrameGrabber grabber;
 	quint16 port = 7777;
 	bool ok = true;
 
-	QApplication::setApplicationName("webcam-server");
-	QApplication::setApplicationVersion("0.0.0");
+	QCoreApplication::setApplicationName("webcam-server");
+	QCoreApplication::setApplicationVersion("0.0.0");
 	parser.setApplicationDescription("Webcam server that serves POV pixel data");
 
 	QCommandLineOption portOption(
 			QStringList() << "p" << "port",
-			QApplication::translate("main", "set server port"),
-			QApplication::translate("main", "PORT"));
+			QCoreApplication::translate("main", "set server port"),
+			QCoreApplication::translate("main", "PORT"));
 	parser.addOption(portOption);
 
 	QCommandLineOption numLEDsPerStripOption(
 			"num-leds-per-strip",
-			QApplication::translate("main", "set number of LEDs per strip"),
-			QApplication::translate("main", "N"));
+			QCoreApplication::translate("main", "set number of LEDs per strip"),
+			QCoreApplication::translate("main", "N"));
 	parser.addOption(numLEDsPerStripOption);
 
 	QCommandLineOption numStripsOption(
 			"num-strips",
-			QApplication::translate("main", "set number of strips"),
-			QApplication::translate("main", "N"));
+			QCoreApplication::translate("main", "set number of strips"),
+			QCoreApplication::translate("main", "N"));
 	parser.addOption(numStripsOption);
 
 	parser.addHelpOption();
