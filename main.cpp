@@ -50,6 +50,7 @@ static void writePixelData(QTcpSocket *socket, float angle)
 
 	socket->write(pixelData, numLEDsPerStrip * numStrips * NUM_CHANNELS);
 	socket->flush();
+	fprintf(stdout, "written %d bytes\n", numLEDsPerStrip * numStrips * NUM_CHANNELS);
 }
 
 static void onNewConnection()
