@@ -8,5 +8,5 @@ INCLUDEPATH += .
 QT += multimediawidgets
 
 # Input
-SOURCES += main.cpp CameraFrameGrabber.cpp
-HEADERS += CameraFrameGrabber.h
+SOURCES += main.cpp CameraFrameGrabber.cpp Server.cpp
+HEADERS += CameraFrameGrabber.h Server.h
