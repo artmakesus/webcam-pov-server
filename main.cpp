@@ -80,6 +80,7 @@ int main(int argc, char **argv)
 		numStrips = 1;
 	fprintf(stdout, "num strips: %d\n", numStrips);
 
+	QObject::connect(&camera, SIGNAL(error(QCamera::Error)), &app, SLOT(quit()));
 	camera.setViewfinder(&grabber);
 	camera.start();
 
