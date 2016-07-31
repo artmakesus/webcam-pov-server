@@ -69,9 +69,10 @@ void Server::reply(QByteArray datagram, QHostAddress sender, quint16 senderPort)
 
 		for (int j = 0; j < numLEDsPerStrip; j++) {
 			const unsigned int argb = mImage->pixel(x, y);
-			pixelData[(i * numLEDsPerStrip + j) * NUM_CHANNELS + 0] = 0xFF & (argb >> 16);
-			pixelData[(i * numLEDsPerStrip + j) * NUM_CHANNELS + 1] = 0xFF & (argb >>  8);
-			pixelData[(i * numLEDsPerStrip + j) * NUM_CHANNELS + 2] = 0xFF & (argb >>  0);
+			const unsigned int index = (i * numLEDsPerStrip + j) * NUM_CHANNELS;
+			pixelData[index + 0] = qRed(argb);
+			pixelData[index + 1] = qGreen(argb);
+			pixelData[index + 2] = qBlue(argb);
 			x += dx;
 			y += dy;
 		}
