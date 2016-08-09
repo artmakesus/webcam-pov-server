@@ -14,6 +14,7 @@ public:
 
 	void setNumLEDsPerStrip(int num);
 	void setStrips(int num);
+	void setLedOffset(int num);
 	void listen();
 
 public slots:
@@ -27,6 +28,7 @@ private:
 	QUdpSocket *server;
 	int numLEDsPerStrip;
 	int numStrips;
+	int ledOffset;
 
 	void reply(QByteArray, QHostAddress sender, quint16 senderPort);
 };

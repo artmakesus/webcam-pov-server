@@ -12,7 +12,8 @@ Server::Server(QObject *parent, QHostAddress host, quint64 port) :
 	mImage(NULL),
 	server(new QUdpSocket(this)),
 	numLEDsPerStrip(0),
-	numStrips(0)
+	numStrips(0),
+	ledOffset(0)
 {
 }
 
@@ -62,10 +63,17 @@ void Server::reply(QByteArray datagram, QHostAddress sender, quint16 senderPort)
 	const float radius = cx > cy ? cy : cx;
 
 	for (int i = 0; i < numStrips; i++) {
-		const float dx = radius / numLEDsPerStrip * qCos(angle + i * STRIP_GAP_ANGLE);
-		const float dy = radius / numLEDsPerStrip * qSin(angle + i * STRIP_GAP_ANGLE);
-		float x = cx;
-		float y = cy;
+		const float cos = qCos(angle + i * STRIP_GAP_ANGLE);
+		const float sin = qSin(angle + i * STRIP_GAP_ANGLE);
+		float dx = radius * cos / numLEDsPerStrip;
+		float dy = radius * sin / numLEDsPerStrip;
+		const float offsetX = ledOffset * dx;
+		const float offsetY = ledOffset * dy;
+		const float offsetRatio = ((float) numLEDsPerStrip - ledOffset) / numLEDsPerStrip;
+		dx *= offsetRatio;
+		dy *= offsetRatio;
+		float x = cx + offsetX;
+		float y = cy + offsetY;
 
 		for (int j = 0; j < numLEDsPerStrip; j++) {
 			const unsigned int argb = mImage->pixel(x, y);
@@ -91,6 +99,11 @@ void Server::setNumLEDsPerStrip(int num)
 void Server::setStrips(int num)
 {
 	numStrips = num;
+}
+
+void Server::setLedOffset(int num)
+{
+	ledOffset = num;
 }
 
 void Server::listen()

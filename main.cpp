@@ -14,6 +14,7 @@ static CameraFrameGrabber grabber;
 // Settings
 static int numLEDsPerStrip;
 static int numStrips;
+static int ledOffset;
 
 int main(int argc, char **argv)
 {
@@ -44,6 +45,12 @@ int main(int argc, char **argv)
 			QCoreApplication::translate("main", "set number of strips"),
 			QCoreApplication::translate("main", "N"));
 	parser.addOption(numStripsOption);
+
+	QCommandLineOption ledOffsetOption(
+			"led-offset",
+			QCoreApplication::translate("main", "set led offset"),
+			QCoreApplication::translate("main", "N"));
+	parser.addOption(ledOffsetOption);
 
 	parser.addHelpOption();
 	parser.addVersionOption();
@@ -80,6 +87,18 @@ int main(int argc, char **argv)
 		numStrips = 1;
 	fprintf(stdout, "num strips: %d\n", numStrips);
 
+	if (parser.isSet("led-offset")) {
+		QString ledOffsetValue = parser.value(ledOffsetOption);
+		ledOffset = ledOffsetValue.toInt(&ok);
+		if (!ok) {
+			fprintf(stderr, "invalid led offset value\n");
+			return -EINVAL;
+		}
+	}
+	if (ledOffset < 0)
+		ledOffset = 0;
+	fprintf(stdout, "led offset: %d\n", ledOffset);
+
 	QObject::connect(&camera, SIGNAL(error(QCamera::Error)), &app, SLOT(quit()));
 	camera.setViewfinder(&grabber);
 	camera.start();
@@ -87,6 +106,7 @@ int main(int argc, char **argv)
 	Server server(NULL, QHostAddress::Any, port);
 	server.setNumLEDsPerStrip(numLEDsPerStrip);
 	server.setStrips(numStrips);
+	server.setLedOffset(ledOffset);
 	QObject::connect(&grabber, &CameraFrameGrabber::frameAvailable, &server, &Server::onImageAvailable);
 
 	server.listen();
